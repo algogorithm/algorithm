@@ -1,8 +1,9 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -21,16 +22,17 @@ public class BOJ_16235_나무_재테크 {
 
 		@Override
 		public int compareTo(Tree t) {
-			return t.age - this.age;
+			return this.age - t.age;
 		}
 
 		@Override
 		public String toString() {
 			return "Tree [r=" + r + ", c=" + c + ", age=" + age + "]";
 		}
+
 	}
-	static int[] R = {-1,-1,-1,0,0,1,1,1};
-	static int[] C = {-1,0,1,-1,1,-1,0,1};
+	static int[] DR = {-1,-1,-1,0,0,1,1,1};
+	static int[] DC = {-1,0,1,-1,1,-1,0,1};
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -40,12 +42,15 @@ public class BOJ_16235_나무_재테크 {
 		int K = Integer.parseInt(st.nextToken()); // K년 지난 후
 		int[][] soil = new int[N+1][N+1];
 		int[][] nutrition = new int[N+1][N+1];
-		ArrayList<Tree> liveTrees = new ArrayList<>();
-		Queue<Tree> deadTrees = new LinkedList<>();
 		
-		for(int i=1; i<N+1; i++) {
+		ArrayList<Tree> inputTree = new ArrayList<>();
+		Deque<Tree> plantedTree = new ArrayDeque<>();
+		Queue<Tree> bornTree = new LinkedList<>();
+		Queue<Tree> deadTree = new LinkedList<>();
+		
+		for(int i=1; i<=N; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j=1; j<N+1; j++) {
+			for(int j=1; j<=N; j++) {
 				nutrition[i][j] = Integer.parseInt(st.nextToken());
 				soil[i][j] = 5;
 			}
@@ -57,57 +62,59 @@ public class BOJ_16235_나무_재테크 {
 			int x = Integer.parseInt(st.nextToken());
 			int y = Integer.parseInt(st.nextToken());
 			int age = Integer.parseInt(st.nextToken());
-			liveTrees.add(new Tree(x, y, age));
+			inputTree.add(new Tree(x, y, age));
+		}
+		
+		Collections.sort(inputTree);
+		for(Tree t : inputTree) {
+			plantedTree.addLast(t);
 		}
 
 		while(K-- > 0) {
-			Collections.sort(liveTrees);
 			// 봄 (양분 먹고 나이 1 증가)
-			for(int i=liveTrees.size()-1; i>=0; i--) {
-				Tree t = liveTrees.get(i);
+			int qSize = plantedTree.size();
+			for(int i=0; i<qSize; i++) {
+				Tree curTree = plantedTree.pollFirst();
 				
-				if(soil[t.r][t.c] >= t.age) {
-					soil[t.r][t.c] -= t.age;
-					liveTrees.get(i).age++;
+				if(soil[curTree.r][curTree.c] >= curTree.age) {
+					soil[curTree.r][curTree.c] -= curTree.age;
+					curTree.age++;
+					if(curTree.age % 5 == 0) bornTree.add(curTree);
+					plantedTree.addLast(curTree);
 				} else {
-					liveTrees.remove(i);
-					deadTrees.add(new Tree(t.r, t.c, t.age));
+					deadTree.add(new Tree(curTree.r, curTree.c, curTree.age));
 				}
 			}
 			
-			
 			// 여름 (죽은 나무가 양분으로 변함)
-			int qSize = deadTrees.size();
-			for(int i=0; i<qSize; i++) {
-				Tree t = deadTrees.poll();
+			while(!deadTree.isEmpty()) {
+				Tree dead = deadTree.poll();
 				
-				soil[t.r][t.c] += t.age/2;
+				soil[dead.r][dead.c] += dead.age/2;
 			}
 			
 			// 가을 (나무 번식)
-			for(int i=liveTrees.size()-1; i>=0; i--) {
-				Tree t = liveTrees.get(i);
+			while(!bornTree.isEmpty()) {
+				Tree born = bornTree.poll();
 				
-				if(t.age % 5 == 0) {
-					for(int j=0; j<8; j++) {
-						int nr = R[j] + t.r;
-						int nc = C[j] + t.c;
-						
-						if(nr>=1 && nr<=N && nc>=1 && nc<=N) {
-							liveTrees.add(new Tree(nr, nc, 1));
-						}
+				for(int i=0; i<8; i++) {
+					int nr = born.r + DR[i];
+					int nc = born.c + DC[i];
+					
+					if(nr>=1 && nr<=N && nc>=1 && nc<=N) {
+						plantedTree.addFirst(new Tree(nr, nc, 1));
 					}
 				}
 			}
 			
 			// 겨울(영양소 추가)
-			for(int i=0; i<N; i++) {
-				for(int j=0; j<N; j++) {
+			for(int i=1; i<=N; i++) {
+				for(int j=1; j<=N; j++) {
 					soil[i][j] += nutrition[i][j];
 				}
 			}
 		}
-		
-		System.out.println(liveTrees.size());
+	
+		System.out.println(plantedTree.size());
 	}
 }
