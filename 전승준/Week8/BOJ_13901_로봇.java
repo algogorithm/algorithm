@@ -7,63 +7,63 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class BOJ_13901_로봇 {
-	static int K, R, C, curX, curY, dirIdx;
-	static int[][] map;
-	static boolean[][] visited;
-	static int[] dir = new int[4];
-	//상 하 좌 우 
-	static int[] dx = {-1,1,0,0};
-	static int[] dy = {0,0,-1,1};
-	
+	static int[] DR = {-1,1,0,0};
+	static int[] DC = {0,0,-1,1};
+	static int R, C;
+	static int[][] MAP;
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		
 		R = Integer.parseInt(st.nextToken());
 		C = Integer.parseInt(st.nextToken());
-		map = new int[R][C];
-		visited = new boolean[R][C];
-		K = Integer.parseInt(br.readLine());
+		MAP = new int[R][C];
 		
-		for(int i = 0 ; i < K ; i++) {
+		int obstacleCnt = Integer.parseInt(br.readLine());
+		for(int i=0; i<obstacleCnt; i++) {
 			st = new StringTokenizer(br.readLine());
-			int r = Integer.parseInt(st.nextToken());
-			int c = Integer.parseInt(st.nextToken());
-			map[r][c] = 2;
+			MAP[Integer.parseInt(st.nextToken())][Integer.parseInt(st.nextToken())] = 9; // 장애물
 		}
 		st = new StringTokenizer(br.readLine());
-		curX = Integer.parseInt(st.nextToken());
-		curY = Integer.parseInt(st.nextToken());
+		int robotR = Integer.parseInt(st.nextToken());
+		int robotC = Integer.parseInt(st.nextToken());
 		
+		int[] direction = new int[4];
 		st = new StringTokenizer(br.readLine());
-		
-		for(int i = 0 ; i < 4; i++) {
-			dir[i] = Integer.parseInt(st.nextToken()) - 1;
+		for(int i=0; i<direction.length; i++) {
+			direction[i] = Integer.parseInt(st.nextToken()) - 1;
 		}
-		bfs();
-		System.out.println(curX+" "+curY);
+		
+		int[] res = bfs(robotR, robotC, direction);
+		System.out.println(res[0]+" "+res[1]);
 	}
-
-	private static void bfs() {
-		Queue<int []> queue = new LinkedList<int[]>();
-		visited[curX][curY] = true;
-		queue.offer(new int[] {curX, curY});
+	
+	private static int[] bfs(int robotR, int robotC, int[] direction) {
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int[] {robotR, robotC});
+		boolean[][] v = new boolean[R][C];
+		v[robotR][robotC] = true;
+		int d = 0;
+		int[] poll = new int[2];
 		
-		while(! queue.isEmpty()) {
-			int[] cur = queue.poll();
-			for(int i = 0 ; i < 4; i++) {
-				int d = dir[(dirIdx + i) % 4];
-				int nx = cur[0] + dx[d];
-				int ny = cur[1] + dy[d];
+		while(!q.isEmpty()) {
+			poll = q.poll();
+			MAP[poll[0]][poll[1]] = 1;
+			
+			for(int i=0; i<4; i++) {
+				int nr = poll[0] + DR[direction[d]];
+				int nc = poll[1] + DC[direction[d]];
 				
-				if(0 > nx || nx >= R || 0 > ny || ny >= C || visited[nx][ny] == true || map[nx][ny] == 2) continue;
-				
-				visited[nx][ny] = true;
-				queue.offer(new int[] {nx, ny});
-				dirIdx = (dirIdx + i) % 4;
-				curX = nx;
-				curY = ny;
-				break;
+				if(nr>=0 && nr<R && nc>=0 && nc<C && MAP[nr][nc] == 0) {
+					q.add(new int[] {nr, nc});
+					break;
+				} else {
+					d++;
+					d%=4;
+				}
 			}
+			
 		}
+		return poll;
 	}
 }
