@@ -40,7 +40,7 @@ public class silver1_14218_그래프탐색2 {
 
 			sb.append(0 + " ");
 			for (int j = 2; j < arr.length; j++) {
-				sb.append(arr[j] == 0 ? -1 : arr[j] + " ");
+				sb.append(arr[j] == 0 ? -1 + " " : arr[j] + " ");
 			}
 			sb.append("\n");
 		}
