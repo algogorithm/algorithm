@@ -48,8 +48,6 @@ public class silver2_13901_로봇 {
 			int[] cur = queue.poll();
 			r_R = cur[0];
 			r_C = cur[1];
-//			System.out.println(r_R + " " + r_C);
-//			System.out.println("========================");
 			
 			for (int i = 0; i < dir.length; i++) {
 				// 방향 조심 ㅠ
