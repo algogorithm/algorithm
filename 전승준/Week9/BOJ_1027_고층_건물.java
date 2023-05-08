@@ -19,10 +19,51 @@ public class BOJ_1027_고층_건물 {
 		for(int currB=1; currB<buildings.length; currB++) {
 			int sum = 0, cnt = 0;
 			
+			
 			for(int tgetB=1; tgetB<buildings.length; tgetB++) {
 				if(currB == tgetB) {
-					sum += cnt;
-					cnt = 0;
+					continue;
+				}
+				
+				double x = Math.abs(currB - tgetB); // 밑변
+				double y = buildings[currB]; // 높이
+				double a = x / y; // tangent
+				System.out.println("currB: "+currB+" tgetB: "+tgetB+" tangent: "+a);
+				double b = y - a*x; //직선의 방정식 y = ax + b;
+				
+				if(tgetB < currB) {
+					for(int i=currB-1; i>=tgetB; i--) {
+						if(buildings[i] > (a * x) + b || i == currB-1) cnt++;
+						else break;
+					}
+				}
+				else if(currB < tgetB) {
+					for(int i=currB; i<tgetB; i++) {
+						if(buildings[i] > (a * x) + b || i == currB) cnt++;
+						else break;
+					}
+				}
+				
+				//System.out.println("currB: "+currB+" tgetB: "+tgetB);
+				
+				
+			}
+			System.out.println();
+			sum += cnt;
+			res = Math.max(res, sum);
+		}
+		System.out.println(res);
+	}
+
+}
+
+/*
+
+		for(int currB=1; currB<buildings.length; currB++) {
+			int sum = 0, cnt = 0;
+			
+			for(int tgetB=1; tgetB<buildings.length; tgetB++) {
+				if(currB == tgetB) {
 					continue;
 				}
 				
@@ -43,8 +84,8 @@ public class BOJ_1027_고층_건물 {
 			sum += cnt;
 			res = Math.max(res, sum);
 		}
-		System.out.println(res);
-	}
 
-}
 
+
+
+ */
