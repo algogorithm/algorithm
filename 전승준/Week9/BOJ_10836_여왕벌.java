@@ -2,6 +2,7 @@ package Week9;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class BOJ_10836_여왕벌 {
@@ -9,22 +10,41 @@ public class BOJ_10836_여왕벌 {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		StringBuilder sb = new StringBuilder();
 		
 		int m = Integer.parseInt(st.nextToken());
-		int days = Integer.parseInt(st.nextToken());
-		int[][] space = new int[m][m];
+		int day = Integer.parseInt(st.nextToken());
+		int[] space = new int[m*2-1];
 		
+		Arrays.fill(space, 1);
 		
-		
-		print(space);
-	}
+		for(int d=0; d<day; d++) {
+			st = new StringTokenizer(br.readLine());
+			int zero = Integer.parseInt(st.nextToken());
+			int one = Integer.parseInt(st.nextToken());
+			int two = Integer.parseInt(st.nextToken());
 
-	private static void print(int[][] space) {
-		for(int i=0; i<space.length; i++) {
-			for(int j=0; j<space[0].length; j++) {
-				System.out.print((space[i][j]+1)+" ");
+			for(int i=0; i<space.length; i++) {
+				if(zero-- > 0) {
+					continue;
+				}
+				else if(one-- > 0) {
+					space[i]++;
+				}
+				else if(two-- > 0) {
+					space[i] += 2;
+				}
 			}
-			System.out.println();
-		}		
+			
+		}
+		
+		for(int i=m-1; i>=0; i--) {
+			sb.append(space[i]+" ");
+			for(int j=m; j<space.length; j++) {
+				sb.append(space[j]+" ");
+			}
+			sb.append("\n");
+		}
+		System.out.println(sb);
 	}
 }
