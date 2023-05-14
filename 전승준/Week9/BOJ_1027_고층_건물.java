@@ -49,7 +49,7 @@ public class BOJ_1027_고층_건물 {
 			}
 
 			res = Math.max(res, lMax + rMax);
-		}
+		}	
 		
 		System.out.println(res);
 	}
