@@ -2,6 +2,7 @@ package Week10;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class BOJ_2138_전구와_스위치 {
 	static int N;
@@ -9,40 +10,34 @@ public class BOJ_2138_전구와_스위치 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
 		
-		char[] in = br.readLine().toCharArray();
+		char[] firstOff = br.readLine().toCharArray();
+		char[] firstOn = Arrays.copyOf(firstOff, N);
 		char[] out = br.readLine().toCharArray();
-		int cnt = 0;
-
+		int cntOff = 0, cntOn = 1;
+		
+		push(firstOn, 0);
+		
 		for(int i=1; i<N; i++) {
-			boolean isChanged = false;
-
-			if(in[i-1] != out[i-1]) {
-				push(in, i-1);
-				for(int d=0; d<N; d++) {
-					System.out.print(in[i]);
-				}System.out.println();
-				isChanged = true;
+			if(firstOff[i-1] != out[i-1]) {
+				push(firstOff, i);
+				cntOff++;
+			}
+			if(firstOn[i-1] != out[i-1]) {
+				push(firstOn, i);
+				cntOn++;
 			}
 			
-			/*
-			if(i==0 && (in[i] != out[i] || in[i+1] != out[i+1])) {
-				push(in, 0);
-				isChanged = true;
-			} else if(i==N-1 && (in[i-1] != out[i-1] || in[i] != out[i])) {
-				push(in, N-1);
-				isChanged = true;
-			} else if (in[i-1] != out[i-1] || in[i] != out[i] || in[i+1] != out[i+1]) {
-				push(in, i);
-				isChanged = true;
-			}
-			*/
-			
-			if(isChanged) cnt++;
 		}
 		
-		if(in[N-1] != out[N-1]) cnt = -1;
-			
-		System.out.println(cnt);
+		int res = Integer.MAX_VALUE;
+		if(firstOff[N-1] == out[N-1]) {
+			res = Math.min(cntOff, res);
+		} else if(firstOn[N-1] == out[N-1]){
+			res = Math.min(cntOn, res);
+		} else {
+			res = -1;
+		}
+		System.out.println(res);
 	}
 	
 	private static void push(char[] in, int index) {
