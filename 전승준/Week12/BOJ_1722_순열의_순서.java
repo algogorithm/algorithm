@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class BOJ_1722_순열의_순서 {
-	static int CNT, K;
 	static long[] FACTORIAL;
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -15,6 +14,7 @@ public class BOJ_1722_순열의_순서 {
 		int type = Integer.parseInt(st.nextToken());
 		
 		FACTORIAL = new long[T+1];
+		FACTORIAL[0] = 1;
 		FACTORIAL[1] = 1;
 		calcFactorial(T);
 		
@@ -22,23 +22,25 @@ public class BOJ_1722_순열의_순서 {
 		boolean[] check = new boolean[T+1];
 		
 		if(type == 1) {
-			K = Integer.parseInt(st.nextToken());
-			int[] resArray = new int[T];
+			long K = Long.parseLong(st.nextToken());
 			
-			for(int i=0; i<resArray.length; i++) {
-				int cntNum = 1;
+			for(int i=0; i<T; i++) {
+				int cnt = 1;
+
+				while(K > FACTORIAL[index]) {
+					K -= FACTORIAL[index];
+					cnt++;
+				}
 				
-				for(int j=1; j<=T; j++) {
-					if(K > FACTORIAL[index] && !check[j]) {
-						K -= FACTORIAL[index];
-						cntNum++;
-					}
-				}				
-				System.out.print(cntNum+" ");
-				check[cntNum] = true;
+				for(int j=1; j<=cnt; j++) {
+					if(check[j]) cnt++;
+				}
+				
+				System.out.print(cnt+" ");
+				check[cnt] = true;
 				index--;
 			}
-		} 
+		}
 		else if(type == 2) {
 			long result = 1;
 			
