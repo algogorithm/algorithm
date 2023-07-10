@@ -18,7 +18,6 @@ public class BOJ_12919_A와_B_2 {
 	}
 	
 	private static void deleteString(String target) {
-		System.out.println(target);
 		if(target.equals(FIND)) {
 			res = true;
 			return;
