@@ -1,47 +1,60 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.*;
 
 public class BJ10703 {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        while (T-- > 0) {
-            String input = br.readLine();
-            int result = isPalindrome(input);
-            System.out.println(result);
+        int r = Integer.parseInt(st.nextToken());
+        int s = Integer.parseInt(st.nextToken());
+
+        char[][] map = new char[r][s];
+
+        for (int i = 0; i < r; i++) {
+            String row = br.readLine();
+            map[i] = row.toCharArray();
         }
-    }
 
-    private static int isPalindrome(String str) {
-        int left = 0;
-        int right = str.length() - 1;
+        int downCnt = 100000;
 
-        while (left < right) {
-            if (str.charAt(left) != str.charAt(right)) {
-                if (isRange(str, left + 1, right) || isRange(str, left, right - 1)) {
-                    return 1;
-                } else {
-                    return 2;
+        for (int j = 0; j < s; j++) {
+            for (int i = r - 1; i >= 0; i--) {
+                if (map[i][j] == 'X') {
+                    downCnt = Math.min(downCnt, getCnt(map, i, j));
+                    break;
                 }
             }
-
-            left++;
-            right--;
         }
 
-        return 0;
+        for (int i = r - 1; i >= 0; i--) {
+            for (int j = 0; j < s; j++) {
+                if (map[i][j] != 'X')
+                    continue;
+
+                map[i][j] = '.';
+                map[i + downCnt][j] = 'X';
+            }
+        }
+
+        for (int i = 0; i < r; i++) {
+            System.out.println(map[i]);
+        }
+
     }
 
-    private static boolean isRange(String str, int left, int right) {
-        while (left < right) {
-            if (str.charAt(left) != str.charAt(right)) {
-                return false;
-            }
-            left++;
-            right--;
+    static int getCnt(char[][] map, int row, int col) {
+
+        int cnt = 0;
+        for (int i = row + 1; i < map.length; i++) {
+            if (map[i][col] == '.')
+                cnt++;
+
+            else
+                break;
         }
-        return true;
+
+        return cnt;
     }
 }
