@@ -1,60 +1,47 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class BJ10703 {
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        int T = Integer.parseInt(br.readLine());
 
-        int r = Integer.parseInt(st.nextToken());
-        int s = Integer.parseInt(st.nextToken());
-
-        char[][] map = new char[r][s];
-
-        for (int i = 0; i < r; i++) {
-            String row = br.readLine();
-            map[i] = row.toCharArray();
+        while (T-- > 0) {
+            String input = br.readLine();
+            int result = isPalindrome(input);
+            System.out.println(result);
         }
-
-        int downCnt = 100000;
-
-        for (int j = 0; j < s; j++) {
-            for (int i = r - 1; i >= 0; i--) {
-                if (map[i][j] == 'X') {
-                    downCnt = Math.min(downCnt, getCnt(map, i, j));
-                    break;
-                }
-            }
-        }
-
-        for (int i = r - 1; i >= 0; i--) {
-            for (int j = 0; j < s; j++) {
-                if (map[i][j] != 'X')
-                    continue;
-
-                map[i][j] = '.';
-                map[i + downCnt][j] = 'X';
-            }
-        }
-
-        for (int i = 0; i < r; i++) {
-            System.out.println(map[i]);
-        }
-
     }
 
-    static int getCnt(char[][] map, int row, int col) {
+    private static int isPalindrome(String str) {
+        int left = 0;
+        int right = str.length() - 1;
 
-        int cnt = 0;
-        for (int i = row + 1; i < map.length; i++) {
-            if (map[i][col] == '.')
-                cnt++;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                if (isRange(str, left + 1, right) || isRange(str, left, right - 1)) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
 
-            else
-                break;
+            left++;
+            right--;
         }
 
-        return cnt;
+        return 0;
+    }
+
+    private static boolean isRange(String str, int left, int right) {
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
     }
 }
