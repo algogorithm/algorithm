@@ -46,17 +46,18 @@ public class BOJ_1062_가르침 {
 			CHS.add(ch);
 		}
 		
-		combination(0, CHS.size(), K, new boolean[CHS.size()]);
+		if(CHS.size() > K) {
+			combination(0, CHS.size(), K, new boolean[CHS.size()]);			
+		} else result += STRS.size();
 		
 		System.out.println(result + MAX);
 	}
 	
 	private static void combination(int depth, int n, int r, boolean[] v) {
-		if(r == 0) {			
+		if(r == 0) {
 			int count = 0;
 			for(int cur=0; cur<STRS.size(); ++cur) {
 				String str = STRS.get(cur);
-				System.out.println("STR는?: "+str);
 				int check = 0;
 				
 				for(int i=0; i<str.length(); ++i) {
