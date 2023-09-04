@@ -31,21 +31,20 @@ public class BOJ_2512_예산 {
 			return;
 		}
 		
-//		binary_search(1, budgetTotal);
-		calculateBudget(126);
-		calculateBudget(127);
-		calculateBudget(128);
+		binary_search(1, budgetTotal);
 		System.out.println(answer);
 		
 	}
 	private static void binary_search(int min, int max) {
 		int mid = (min+max) / 2;
 		
-		if(min == max) return;
+		if(min == max) {
+			return;
+		}
 		
 		if(calculateBudget(mid)) {
-			answer = Math.max(answer, mid);
-			binary_search(mid, max);
+			answer = mid;
+			binary_search(mid+1, max);
 		} else {
 			binary_search(min, mid);
 		}
@@ -54,13 +53,10 @@ public class BOJ_2512_예산 {
 		int sum = 0;
 		
 		for (int n : needs) {
-			sum += n - money;
-			System.out.print(sum+" ");
+			if(n <= money) sum += n;
+			else sum += money;
 		}
-		System.out.println();
-		System.out.println("MONEY:"+money);
-		System.out.println("\n================");
 		
-		return sum - money*needs.length - budgetTotal >= 0;
+		return sum <= budgetTotal;
 	}
 }

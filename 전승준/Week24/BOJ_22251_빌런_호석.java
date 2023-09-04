@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 */
 public class BOJ_22251_빌런_호석 {
 	static boolean[][] number_blink = {
-			{false,false,false,false,false,false,false},// 0
+			{true,true,true,false,true,true,true},// 0
 			{false,false,true,false,false,true,false}, 	// 1
 			{true,false,true,true,true,false,true}, 	// 2
 			{true,false,true,true,false,true,true}, 	// 3
@@ -24,7 +24,7 @@ public class BOJ_22251_빌런_호석 {
 			{true,true,true,true,true,true,true},		// 8
 			{true,true,true,true,false,true,true}		// 9
 	};
-	static int[] digit;
+	static String originalFloor;
 	static int N, K, P, answer;
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,47 +32,43 @@ public class BOJ_22251_빌런_호석 {
 		N = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
 		P = Integer.parseInt(st.nextToken());
-		String X = st.nextToken();
-
-		digit = new int[K];
-		
-		for(int i=0; i<K; ++i) {
-			digit[i] = X.charAt(i);
-		}
-		
-		subset(0, new boolean[K]);
-		
-		System.out.println(answer);
-	}
-	private static void subset(int start, boolean[] visited) {
-		if(start == K) {
-			changeNumber(visited);			
-			return;
-		}
-		
-		visited[start] = true;
-		subset(start+1, visited);
-		visited[start] = false;
-		subset(start+1, visited);
-	}
-	private static int changeNumber(boolean[] visited) {
-		int[] tmpDigit = new int[K];
-		
-		for(int i=0; i<K; ++i) {
+		originalFloor = makeNumber(Integer.parseInt(st.nextToken()));
+		System.out.println("orgFloor:"+originalFloor);
+		for(int i=1; i<=N; ++i) {
+			String floor = makeNumber(i);
+			System.out.println("floor: "+floor+" checkFloor 결과:"+checkFloor(floor));
 			
+			
+			if(checkFloor(floor) <= P) ++answer;
 		}
 		
-		for(int i=0; i<K; ++i) {
-			if(visited[i]) {
-				for(int j=0; j<7; ++j) {
-					
-				}				
-			} 
-		}
-		return 0;
-	}
-	private static boolean verifyFloor(String curFloor) {
-		return Integer.parseInt(curFloor) <= N;
+		System.out.println(answer-1);
 	}
 
+	private static int checkFloor(String inputFloor) {
+		int cnt = 0;
+		
+		for(int i=0; i<K; ++i) {
+			int orgn = originalFloor.charAt(i) - '0';
+			int fake = inputFloor.charAt(i) - '0';
+			
+			if(orgn != fake) {
+				for(int j=0; j<7; ++j) {
+					if(number_blink[orgn][j] != number_blink[fake][j]) ++cnt;
+				}
+			}
+		}
+
+		return cnt;
+	}
+
+	private static String makeNumber(int num) {
+		String numToStr = Integer.toString(num);
+		int zeros = K - numToStr.length();
+		
+		for(int i=0; i<zeros; ++i) {
+			numToStr = "0" + numToStr;
+		}
+		return numToStr;
+	}
 }
