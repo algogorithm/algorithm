@@ -33,11 +33,9 @@ public class BOJ_22251_빌런_호석 {
 		K = Integer.parseInt(st.nextToken());
 		P = Integer.parseInt(st.nextToken());
 		originalFloor = makeNumber(Integer.parseInt(st.nextToken()));
-		System.out.println("orgFloor:"+originalFloor);
+
 		for(int i=1; i<=N; ++i) {
 			String floor = makeNumber(i);
-			System.out.println("floor: "+floor+" checkFloor 결과:"+checkFloor(floor));
-			
 			
 			if(checkFloor(floor) <= P) ++answer;
 		}
